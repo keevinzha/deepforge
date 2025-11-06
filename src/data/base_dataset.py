@@ -11,6 +11,7 @@ from typing import Any, Dict, Union
 import numpy as np
 import torch
 from torch.utils.data import Dataset
+from torch.utils.data.dataloader import default_collate
 
 from src.utils.normalizer import Normalizer
 
@@ -87,3 +88,6 @@ class BaseDataset(Dataset, ABC):
         """
 
         return data
+
+    def collate_fn(self, batch):
+        return default_collate(batch)
