@@ -16,10 +16,11 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-import torch
-import torch.nn as nn
 import time
 import argparse
+
+import torch
+import torch.nn as nn
 
 from src.core.engine import train_one_epoch, evaluate
 from src.utils.checkpoint import (
@@ -55,7 +56,7 @@ def main():
     print(f"Config file: {args.config}")
     print(f"Dataset: {cfg['data']['name']}")
     print(f"Epochs: {cfg['train']['epochs']}")
-    print(f"Batch size: {cfg['train']['batch_size']}")
+    print(f"Batch size: {cfg['data']['batch_size']}")
     print(f"Learning rate: {cfg['train']['lr']}")
     print(f"Optimizer: {cfg['train']['opt']}")
 
@@ -88,7 +89,8 @@ def main():
         batch_size=cfg['data']['batch_size'],
         num_workers=cfg['data']['num_workers'],
         pin_memory=cfg['data']['pin_mem'],
-        drop_last=True
+        drop_last=True,
+        collate_fn=train_set.collate_fn
     )
 
     if enable_eval:
@@ -97,7 +99,8 @@ def main():
             batch_size=int(1.5*cfg['data']['batch_size']), # this magic number comes from https://github.com/facebookresearch/ConvNeXt.git
             num_workers=cfg['data']['num_workers'],
             pin_memory=cfg['data']['pin_mem'],
-            drop_last=False
+            drop_last=False,
+            collate_fn=val_set.collate_fn
         )
     else:
         data_loader_val = None
@@ -133,6 +136,13 @@ def main():
     checkpoint_info = auto_resume(save_dir=cfg['train']['output_dir'], model=model, optimizer=optimizer,
                 scheduler=lr_schedule_values, device=device)
     start_epoch = checkpoint_info['start_epoch']
+
+    # eval mode
+    if cfg['train']['eval_only']:
+        print(f"Eval only mode")
+        test_stats = evaluate(model=model, dataloader=data_loader_val, criterion=criterion, device=device)
+        print(f"Loss of the network on {len(data_loader_val)} test samples: {test_stats['loss']}")
+        return
 
     print("Starting Training")
     print(f"Start epoch: {start_epoch}")

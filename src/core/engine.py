@@ -51,7 +51,9 @@ def train_one_epoch(
 
     optimizer.zero_grad()
 
-    for batch_idx, (samples, targets) in enumerate(metric_logger.log_every(dataloader, print_freq, header)):
+    for batch_idx, result_dict in enumerate(metric_logger.log_every(dataloader, print_freq, header)):
+        samples = result_dict['input']
+        targets = result_dict['target']
         step = batch_idx // update_freq
         if step >= num_training_steps_per_epoch:
             continue
@@ -123,9 +125,9 @@ def evaluate(
     metric_logger = MetricLogger(delimiter="   ")
     header = 'Test:'
 
-    for samples, targets in metric_logger.log_every(dataloader, 10, header):
-        samples = samples.to(device, non_blocking=True)
-        targets = targets.to(device, non_blocking=True)
+    for data_dict in metric_logger.log_every(dataloader, 10, header):
+        samples = data_dict['input'].to(device, non_blocking=True)
+        targets = data_dict['target'].to(device, non_blocking=True)
 
         outputs = model(samples)
         loss = criterion(outputs, targets)
