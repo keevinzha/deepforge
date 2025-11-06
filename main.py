@@ -94,7 +94,7 @@ def main():
     if enable_eval:
         data_loader_val = torch.utils.data.DataLoader(
             val_set,
-            batch_size=1.5*cfg['data']['batch_size'], # this magic number comes from https://github.com/facebookresearch/ConvNeXt.git
+            batch_size=int(1.5*cfg['data']['batch_size']), # this magic number comes from https://github.com/facebookresearch/ConvNeXt.git
             num_workers=cfg['data']['num_workers'],
             pin_memory=cfg['data']['pin_mem'],
             drop_last=False
@@ -136,7 +136,7 @@ def main():
 
     print("Starting Training")
     print(f"Start epoch: {start_epoch}")
-    print(f"End epoch: {cfg['training']['epochs']}")
+    print(f"End epoch: {cfg['train']['epochs']}")
     print(f"Best metric so far: {checkpoint_info['best_metric']:.4f}")
 
     monitor_mode = cfg['train'].get('monitor_mode', 'max')
@@ -145,10 +145,10 @@ def main():
 
     best_metric = float('inf')
 
-    for epoch in range(start_epoch, cfg['training']['epochs']):
+    for epoch in range(start_epoch, cfg['train']['epochs']):
         epoch_start_time = time.time()
 
-        print(f"Epoch [{epoch}/{cfg['training']['epochs']}]")
+        print(f"Epoch [{epoch}/{cfg['train']['epochs']}]")
 
         # training
         # todo add tensorboard
@@ -187,7 +187,7 @@ def main():
                 print(f"New best loss: {best_metric:.4f}")
 
             # save best
-            if cfg['checkpoint'].get('save_best', True) and is_best:
+            if cfg['train']['ckpt'] and cfg['train']['output_dir'] and is_best:
                 save_checkpoint(
                     epoch=epoch,
                     model=model,
@@ -197,7 +197,7 @@ def main():
                 )
 
         # save frequently
-        if (epoch + 1) % cfg['checkpoint'].get('save_freq', 10) == 0:
+        if (epoch + 1) % cfg['train'].get('save_ckpt_freq', 10) == 0:
             save_checkpoint(
                 epoch=epoch,
                 model=model,
@@ -228,7 +228,7 @@ def main():
     print("Training Completed!")
     print(f"Total time: {total_time}")
     print(f"Best loss: {best_metric:.4f}")
-    print(f"Checkpoints saved to: {cfg['checkpoint']['save_dir']}")
+    print(f"Checkpoints saved to: {cfg['train']['save_dir']}")
     print("=" * 80)
 
 

@@ -130,10 +130,6 @@ def evaluate(
         outputs = model(samples)
         loss = criterion(outputs, targets)
 
-        pred = outputs.argmax(dim=1)
-        acc = pred.eq(targets).float().mean()
-
-        batch_size = samples.shape[0]
         metric_logger.update(loss=loss.item())
 
     metric_logger.synchronize_between_processes()

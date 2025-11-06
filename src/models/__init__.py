@@ -39,7 +39,7 @@ def register_model(name):
     return decorator
 
 
-def build_model(name, **params):
+def build_model(name, input_size, **params):
     """
     build model from registered model dict
 
@@ -59,7 +59,7 @@ def build_model(name, **params):
         )
 
     model_class = MODEL_REGISTRY[name]
-    return model_class(**params)
+    return model_class(input_size, **params)
 
 
 def list_models():

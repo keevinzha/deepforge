@@ -9,6 +9,7 @@ data:
   train_path: '/data/disk1/datasets/'
   val_path: '/data/disk1/datasets/'
   batch_size: 32
+  input_size: 3072
   num_workers: 4
   pin_mem: True
 
@@ -26,6 +27,6 @@ train:
   output_dir: None
   update_freq: 1
   save_ckpt: True
-  save_ckpt_freq: 1
+  save_ckpt_freq: 10
   monitor_mode: 'min'
 

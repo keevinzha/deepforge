@@ -22,6 +22,7 @@ from torch.utils.data import DataLoader, Dataset
 from ..models import build_model, list_models
 from ..data import build_dataset, list_datasets
 from ..utils.losses import build_loss, list_losses
+from ..utils.optim_factory import create_optimizer as fac_create_optimizer
 
 
 def load_config(config_name: str) -> Dict[str, Any]:
@@ -71,7 +72,8 @@ def set_seed(seed: int, deterministic: bool=False):
 
 def create_model(config: dict) -> nn.Module:
     model_name = config['model']['name']
-    return build_model(model_name)
+    input_size = config['data']['input_size']
+    return build_model(model_name, input_size)
 
 
 def create_dataset(config: dict, is_train: bool) -> Dataset:
@@ -80,7 +82,7 @@ def create_dataset(config: dict, is_train: bool) -> Dataset:
 
 
 def create_optimizer(config: Dict[str, Any], model) -> torch.optim.Optimizer:
-    opt = create_optimizer(config, model)
+    opt = fac_create_optimizer(config, model)
     return opt
 
 
