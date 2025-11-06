@@ -3,6 +3,7 @@ device:
 
 model:
   name: 'mlp'
+  output_channels: 10
 
 data:
   name: 'simple'
@@ -16,7 +17,7 @@ data:
 train:
   opt: 'adamw'
   weight_decay: 0
-  weight_decay_end: None
+  weight_decay_end:
   lr: 0.0001
   min_lr: 0.00001
   loss: 'mae'
@@ -24,9 +25,10 @@ train:
   warmup_epochs: 20
   warmup_steps: -1
   disable_eval: False
-  output_dir: None
+  output_dir: ./experiments
   update_freq: 1
   save_ckpt: True
   save_ckpt_freq: 10
   monitor_mode: 'min'
+  eval_only: True
 

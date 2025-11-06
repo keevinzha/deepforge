@@ -1,5 +1,0 @@
-model:
-  name: mlp
-  params:
-    hidden_size: 256
-    input_size: 10
