@@ -1,0 +1,47 @@
+# experiment information
+experiment:
+  name: default
+  description: "default config template"
+  output_dir: experiments/default
+  seed: 42
+
+# model config
+model:
+  name: your_model  # change to your model name
+  params:
+    # your model params
+    hidden_dim: 256
+
+# data config
+data:
+  train_path: /path/to/train  # change to your training set path
+  val_path: /path/to/val      # change to your validation/test set path
+  batch_size: 32
+  num_workers: 4 # how many workers used in loading data
+
+# training config
+training:
+  loss: mae
+  optimizer:
+    type: adam
+    lr: 1e-4
+    weight_decay: 1e-5
+  epochs: 100
+  use_amp: false
+  clip_grad: 1.0
+
+# checkpoint config
+checkpoint:
+  checkpoint:
+    save_dir: ./checkpoints
+    save_freq: 5
+    save_best: true
+    keep_last_n: 3
+    auto_resume: true
+    resume_path: ''
+
+# result saving config
+saving:
+  save_freq: 10
+  formats: [mat, npy, png]
+  save_visualizations: true

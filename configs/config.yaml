@@ -1,0 +1,31 @@
+device:
+  gpu: 4
+
+model:
+  name: 'mlp'
+
+data:
+  name: 'simple'
+  train_path: '/data/disk1/datasets/'
+  val_path: '/data/disk1/datasets/'
+  batch_size: 32
+  num_workers: 4
+  pin_mem: True
+
+train:
+  opt: 'adamw'
+  weight_decay: 0
+  weight_decay_end: None
+  lr: 0.0001
+  min_lr: 0.00001
+  loss: 'mae'
+  epochs: 100
+  warmup_epochs: 20
+  warmup_steps: -1
+  disable_eval: False
+  output_dir: None
+  update_freq: 1
+  save_ckpt: True
+  save_ckpt_freq: 1
+  monitor_mode: 'min'
+
