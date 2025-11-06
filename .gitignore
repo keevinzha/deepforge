@@ -15,7 +15,7 @@ experiments/*/
 !experiments/.gitkeep
 
 # Tests
-/tests
+tests/
 
 # IDE
 .vscode/
